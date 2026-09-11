@@ -81,7 +81,7 @@ const navGroups: NavGroup[] = [
       {
         id: 'destinations',
         label: 'DESTINATIONS',
-        href: '#',
+        href: '/destinations',
         icon: BookOpen,
       },
     ],
