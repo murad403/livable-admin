@@ -18,6 +18,9 @@ export default function AdminTopbar({
   const pathname = usePathname();
 
   const getPageTitle = () => {
+    if (pathname.includes('/scouting-trips')) {
+      return 'SCOUTING TRIPS';
+    }
     if (pathname.includes('/client-dossiers')) {
       return 'CLIENT DOSSIERS';
     }

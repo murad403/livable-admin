@@ -55,7 +55,7 @@ const navGroups: NavGroup[] = [
       {
         id: 'scouting-trips',
         label: 'SCOUTING TRIPS',
-        href: '#',
+        href: '/scouting-trips',
         icon: Compass,
         badge: { text: '3', variant: 'danger' },
       },
