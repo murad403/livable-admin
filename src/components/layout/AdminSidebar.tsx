@@ -62,7 +62,7 @@ const navGroups: NavGroup[] = [
       {
         id: 'support-queue',
         label: 'SUPPORT QUEUE',
-        href: '#',
+        href: '/support-queue',
         icon: MessageSquare,
         badge: { text: '2', variant: 'danger' },
       },
