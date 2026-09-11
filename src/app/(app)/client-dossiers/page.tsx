@@ -1,7 +1,6 @@
 'use client';
-
-import React, { useState, useMemo } from 'react';
-import { Search, Plus, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
 import ClientDossiersCard, {
   DossierData,
 } from '@/components/shared/ClientDossiersCard';
@@ -84,9 +83,6 @@ const initialDossiers: DossierData[] = [
 
 export default function ClientDossiersPage() {
   const [dossiers, setDossiers] = useState<DossierData[]>(initialDossiers);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ALL');
-  const [countryFilter, setCountryFilter] = useState('ALL');
 
   // Modal States
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -96,32 +92,6 @@ export default function ClientDossiersPage() {
   const [deletingDossier, setDeletingDossier] = useState<DossierData | null>(
     null
   );
-
-  // Search and Filtered Dossiers
-  const filteredDossiers = useMemo(() => {
-    return dossiers.filter((item) => {
-      const matchesSearch =
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.destination.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.advisor.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const matchesStatus =
-        statusFilter === 'ALL' || item.status === statusFilter;
-
-      const matchesCountry =
-        countryFilter === 'ALL' ||
-        (countryFilter === 'Spain' &&
-          (item.destination.includes('Valencia') ||
-            item.destination.includes('Madrid') ||
-            item.destination.includes('Barcelona'))) ||
-        (countryFilter === 'Portugal' &&
-          (item.destination.includes('Porto') ||
-            item.destination.includes('Lisbon')));
-
-      return matchesSearch && matchesStatus && matchesCountry;
-    });
-  }, [dossiers, searchQuery, statusFilter, countryFilter]);
 
   // Create new Dossier
   const handleAddDossier = (data: AddDossierFormValues) => {
@@ -188,68 +158,21 @@ export default function ClientDossiersPage() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
-      {/* Top Controls & Filter Header */}
-      <div className="bg-white border border-neutral-200 rounded p-4 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4">
-        {/* Left Filters Group */}
-        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-          {/* Search Input Bar */}
-          <div className="relative flex items-center flex-1 sm:flex-initial">
-            <Search className="w-3.5 h-3.5 text-neutral-400 absolute left-3 pointer-events-none" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search clients, advisor, city..."
-              className="pl-9 pr-3 py-2 bg-neutral-50/60 border border-neutral-200 rounded text-xs text-neutral-800 placeholder:text-neutral-400 w-full sm:w-64 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
-            />
-          </div>
-
-          {/* Status Dropdown Filter */}
-          <div className="relative">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="appearance-none bg-neutral-50/60 border border-neutral-200 rounded pl-3 pr-8 py-2 text-xs font-bold text-neutral-700 uppercase tracking-wider focus:outline-none focus:border-neutral-400 cursor-pointer"
-            >
-              <option value="ALL">ALL STATUSES ({dossiers.length})</option>
-              <option value="Post-Trip Filing">POST-TRIP FILING</option>
-              <option value="Pre-Scouting">PRE-SCOUTING</option>
-              <option value="Scouting Trip Active">SCOUTING TRIP ACTIVE</option>
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 text-neutral-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
-
-          {/* Country Dropdown Filter */}
-          <div className="relative">
-            <select
-              value={countryFilter}
-              onChange={(e) => setCountryFilter(e.target.value)}
-              className="appearance-none bg-neutral-50/60 border border-neutral-200 rounded pl-3 pr-8 py-2 text-xs font-bold text-neutral-700 uppercase tracking-wider focus:outline-none focus:border-neutral-400 cursor-pointer"
-            >
-              <option value="ALL">ALL COUNTRIES</option>
-              <option value="Spain">SPAIN</option>
-              <option value="Portugal">PORTUGAL</option>
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 text-neutral-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
-        </div>
-
-        {/* Right Add Client Button */}
-        <div className="w-full sm:w-auto flex justify-end">
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="w-full sm:w-auto bg-[#1c1c1c] hover:bg-black text-white px-4 py-2 rounded text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
-          >
-            <Plus className="w-4 h-4" />
-            <span>CLIENT</span>
-          </button>
-        </div>
+      {/* Top Header - Button Only */}
+      <div className="bg-white border border-neutral-200 rounded p-4 shadow-2xs flex justify-end">
+        <button
+          onClick={() => setIsAddModalOpen(true)}
+          className="w-full sm:w-auto bg-[#1c1c1c] hover:bg-black text-white px-4 py-2 rounded text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+        >
+          <Plus className="w-4 h-4" />
+          <span>CLIENT</span>
+        </button>
       </div>
 
       {/* Dossier Cards Responsive Grid */}
-      {filteredDossiers.length > 0 ? (
+      {dossiers.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredDossiers.map((dossier) => (
+          {dossiers.map((dossier) => (
             <ClientDossiersCard
               key={dossier.id}
               dossier={dossier}
@@ -260,7 +183,7 @@ export default function ClientDossiersPage() {
         </div>
       ) : (
         <div className="bg-white border border-neutral-200 rounded p-12 text-center text-neutral-400 text-sm font-medium">
-          No client dossiers found matching your search.
+          No client dossiers found.
         </div>
       )}
 

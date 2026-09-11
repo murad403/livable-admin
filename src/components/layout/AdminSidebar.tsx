@@ -68,34 +68,34 @@ const navGroups: NavGroup[] = [
       },
     ],
   },
-  {
-    id: 'directory-hubs',
-    title: 'DIRECTORY & HUBS',
-    items: [
-      {
-        id: 'user-directory',
-        label: 'USER DIRECTORY',
-        href: '/user-directory',
-        icon: UserCheck,
-      },
-      {
-        id: 'destinations',
-        label: 'DESTINATIONS',
-        href: '/destinations',
-        icon: BookOpen,
-      },
-    ],
-  },
+  // {
+  //   id: 'directory-hubs',
+  //   title: 'DIRECTORY & HUBS',
+  //   items: [
+  //     {
+  //       id: 'user-directory',
+  //       label: 'USER DIRECTORY',
+  //       href: '/user-directory',
+  //       icon: UserCheck,
+  //     },
+  //     {
+  //       id: 'destinations',
+  //       label: 'DESTINATIONS',
+  //       href: '/destinations',
+  //       icon: BookOpen,
+  //     },
+  //   ],
+  // },
   {
     id: 'reports-config',
-    title: 'REPORTS & CONFIG',
+    title: 'CONFIG',
     items: [
-      {
-        id: 'analytics',
-        label: 'ANALYTICS',
-        href: '/analytics',
-        icon: BarChart2,
-      },
+      // {
+      //   id: 'analytics',
+      //   label: 'ANALYTICS',
+      //   href: '/analytics',
+      //   icon: BarChart2,
+      // },
       {
         id: 'settings',
         label: 'SETTINGS',
