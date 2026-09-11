@@ -1,6 +1,8 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   LayoutGrid,
   Users,
@@ -24,7 +26,6 @@ interface NavItem {
     text: string;
     variant: 'default' | 'danger';
   };
-  isActive?: boolean;
 }
 
 interface NavGroup {
@@ -41,14 +42,13 @@ const navGroups: NavGroup[] = [
       {
         id: 'overview',
         label: 'OVERVIEW',
-        href: '#',
+        href: '/',
         icon: LayoutGrid,
-        isActive: true,
       },
       {
         id: 'client-dossiers',
         label: 'CLIENT DOSSIERS',
-        href: '#',
+        href: '/client-dossiers',
         icon: Users,
         badge: { text: '5', variant: 'default' },
       },
@@ -124,6 +124,8 @@ export default function AdminSidebar({
   isCollapsed = false,
   onClose,
 }: AdminSidebarProps) {
+  const pathname = usePathname();
+
   return (
     <>
       {/* Mobile Backdrop Overlay */}
@@ -196,8 +198,13 @@ export default function AdminSidebar({
                 <div className="space-y-1">
                   {group.items.map((item) => {
                     const IconComponent = item.icon;
+                    const isActive =
+                      item.href === '/'
+                        ? pathname === '/'
+                        : pathname.startsWith(item.href);
+
                     return (
-                      <a
+                      <Link
                         key={item.id}
                         href={item.href}
                         onClick={onClose}
@@ -207,7 +214,7 @@ export default function AdminSidebar({
                             ? 'justify-center p-2.5'
                             : 'justify-between px-3 py-2.5'
                         } font-bold text-xs uppercase tracking-wider rounded-sm transition-colors group relative ${
-                          item.isActive
+                          isActive
                             ? 'bg-[#ff3b30] text-white shadow-xs'
                             : 'text-neutral-300 hover:text-white hover:bg-neutral-800/50'
                         }`}
@@ -215,7 +222,7 @@ export default function AdminSidebar({
                         <div className="flex items-center gap-3">
                           <IconComponent
                             className={`w-4 h-4 shrink-0 ${
-                              item.isActive
+                              isActive
                                 ? 'text-white'
                                 : 'text-neutral-400 group-hover:text-white'
                             }`}
@@ -239,7 +246,7 @@ export default function AdminSidebar({
                             {item.badge.text}
                           </span>
                         )}
-                      </a>
+                      </Link>
                     );
                   })}
                 </div>

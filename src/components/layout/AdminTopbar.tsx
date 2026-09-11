@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Bell, Menu } from 'lucide-react';
 
 interface AdminTopbarProps {
@@ -14,6 +15,15 @@ export default function AdminTopbar({
   onToggleSidebar,
   onMobileMenuClick,
 }: AdminTopbarProps) {
+  const pathname = usePathname();
+
+  const getPageTitle = () => {
+    if (pathname.includes('/client-dossiers')) {
+      return 'CLIENT DOSSIERS';
+    }
+    return 'OVERVIEW';
+  };
+
   return (
     <header className="bg-white border-b border-neutral-200 px-4 sm:px-6 py-2.5 flex items-center justify-between h-14 select-none shrink-0">
       {/* Left Section: Collapse Arrow Button & Breadcrumbs */}
@@ -43,7 +53,7 @@ export default function AdminTopbar({
         {/* Breadcrumbs */}
         <div className="flex items-center gap-1.5 text-xs uppercase font-bold tracking-wider">
           <span className="text-neutral-400">ADMIN /</span>
-          <span className="text-neutral-800">OVERVIEW</span>
+          <span className="text-neutral-800">{getPageTitle()}</span>
         </div>
       </div>
 
