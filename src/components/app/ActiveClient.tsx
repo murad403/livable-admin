@@ -79,9 +79,6 @@ export default function ActiveClient() {
             <tr className="border-b border-neutral-100 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
               <th className="py-2.5 px-3 font-bold">CLIENT</th>
               <th className="py-2.5 px-3 font-bold">DESTINATION</th>
-              <th className="py-2.5 px-3 font-bold text-center">PHASE</th>
-              <th className="py-2.5 px-3 font-bold">PROGRESS</th>
-              <th className="py-2.5 px-3 font-bold text-center">ACTION</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-100 text-xs">
@@ -103,44 +100,6 @@ export default function ActiveClient() {
                 {/* Destination */}
                 <td className="py-4 px-3 align-middle font-bold text-neutral-800 uppercase text-xs tracking-tight max-w-50">
                   {item.destination}
-                </td>
-
-                {/* Phase Badge */}
-                <td className="py-4 px-3 align-middle text-center">
-                  <div className="inline-flex flex-col items-center justify-center border border-neutral-200 rounded px-2 py-0.5 bg-neutral-50/50">
-                    <span className="text-[9px] text-neutral-400 uppercase tracking-widest font-semibold leading-tight">
-                      Phase
-                    </span>
-                    <span className="text-xs font-black text-neutral-800 leading-tight">
-                      {item.phase}
-                    </span>
-                  </div>
-                </td>
-
-                {/* Progress Bar & Percent */}
-                <td className="py-4 px-3 align-middle min-w-35">
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 bg-neutral-100 h-1.5 rounded-full overflow-hidden">
-                      <div
-                        className="bg-[#ff3b30] h-full rounded-full transition-all duration-300"
-                        style={{ width: `${item.progress}%` }}
-                      />
-                    </div>
-                    <span className="text-[11px] font-bold text-neutral-600 font-mono min-w-8 text-right">
-                      {item.progress}%
-                    </span>
-                  </div>
-                </td>
-
-                {/* Action Link */}
-                <td className="py-4 px-3 align-middle text-center">
-                  <a
-                    href="#"
-                    className="inline-flex flex-col items-center text-[11px] font-extrabold text-neutral-800 hover:text-[#ff3b30] tracking-wider uppercase transition-colors group"
-                  >
-                    <span>MANAGE</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-neutral-400 group-hover:text-[#ff3b30] group-hover:translate-x-0.5 transition-all -mt-0.5" />
-                  </a>
                 </td>
               </tr>
             ))}

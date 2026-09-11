@@ -1,6 +1,4 @@
 'use client';
-
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -128,7 +126,7 @@ export default function AddScoutingTrips({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                ASSIGNED SCOUT
+                ASSIGNED GUIDE
               </label>
               <input
                 type="text"

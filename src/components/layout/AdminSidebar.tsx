@@ -97,13 +97,6 @@ const navGroups: NavGroup[] = [
         icon: BarChart2,
       },
       {
-        id: 'notifications',
-        label: 'NOTIFICATIONS',
-        href: '#',
-        icon: Bell,
-        badge: { text: '3', variant: 'danger' },
-      },
-      {
         id: 'settings',
         label: 'SETTINGS',
         href: '/settings',

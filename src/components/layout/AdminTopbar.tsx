@@ -1,6 +1,4 @@
 'use client';
-
-import React from 'react';
 import { usePathname } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Bell, Menu } from 'lucide-react';
 
@@ -75,21 +73,10 @@ export default function AdminTopbar({
         </div>
       </div>
 
-      {/* Right Section: Notification & Profile Avatar */}
-      <div className="flex items-center gap-3">
-        {/* Notification Icon */}
-        <button className="relative p-1.5 text-neutral-600 hover:bg-neutral-50 border border-neutral-200 rounded transition-colors cursor-pointer">
-          <Bell className="w-4 h-4 text-neutral-600" />
-          <span className="absolute -top-1 -right-1 bg-[#ff3b30] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none border border-white">
-            3
-          </span>
-        </button>
 
-        {/* Profile Avatar */}
         <button className="w-7 h-7 bg-[#1c1c1c] text-white font-black text-xs flex items-center justify-center rounded-xs hover:bg-black transition-colors shrink-0 cursor-pointer">
           L
         </button>
-      </div>
     </header>
   );
 }

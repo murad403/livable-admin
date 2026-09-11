@@ -22,12 +22,6 @@ export default function QuickActions() {
           <span>+ SCHEDULE TRIP</span>
           <Compass className="w-4 h-4 text-[#ff3b30]" />
         </button>
-
-        {/* EXPORT CSV */}
-        <button className="w-full bg-white border border-neutral-200 hover:bg-neutral-50 text-neutral-600 py-2.5 px-4 rounded font-extrabold text-xs uppercase tracking-wider flex items-center justify-between transition-colors shadow-2xs cursor-pointer">
-          <span>EXPORT CSV</span>
-          <Download className="w-4 h-4 text-neutral-400" />
-        </button>
       </div>
     </div>
   );
