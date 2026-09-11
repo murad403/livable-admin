@@ -106,7 +106,7 @@ const navGroups: NavGroup[] = [
       {
         id: 'settings',
         label: 'SETTINGS',
-        href: '#',
+        href: '/settings',
         icon: Settings,
       },
     ],

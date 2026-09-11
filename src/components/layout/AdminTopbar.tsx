@@ -18,6 +18,9 @@ export default function AdminTopbar({
   const pathname = usePathname();
 
   const getPageTitle = () => {
+    if (pathname.includes('/settings')) {
+      return 'SETTINGS';
+    }
     if (pathname.includes('/analytics')) {
       return 'ANALYTICS';
     }
