@@ -93,7 +93,7 @@ const navGroups: NavGroup[] = [
       {
         id: 'analytics',
         label: 'ANALYTICS',
-        href: '#',
+        href: '/analytics',
         icon: BarChart2,
       },
       {
