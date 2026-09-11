@@ -18,6 +18,9 @@ export default function AdminTopbar({
   const pathname = usePathname();
 
   const getPageTitle = () => {
+    if (pathname.includes('/user-directory')) {
+      return 'USER DIRECTORY';
+    }
     if (pathname.includes('/support-queue')) {
       return 'SUPPORT QUEUE';
     }

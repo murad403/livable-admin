@@ -75,7 +75,7 @@ const navGroups: NavGroup[] = [
       {
         id: 'user-directory',
         label: 'USER DIRECTORY',
-        href: '#',
+        href: '/user-directory',
         icon: UserCheck,
       },
       {
