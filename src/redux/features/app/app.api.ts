@@ -1,5 +1,5 @@
 import baseApi from "@/redux/api/api";
-import { TClient, TCreateClientInput } from "./app.type";
+import { TClient, TCreateClientInput, TRequestedClient } from "./app.type";
 
 const appApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -18,10 +18,17 @@ const appApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Clients"],
         }),
+        getRequestedClients: builder.query<TRequestedClient[], void>({
+            query: () => ({
+                url: "/anonymous/book/list/",
+                method: "GET",
+            }),
+        }),
     }),
 });
 
 export const {
     useGetClientsQuery,
     useCreateClientMutation,
+    useGetRequestedClientsQuery,
 } = appApi;

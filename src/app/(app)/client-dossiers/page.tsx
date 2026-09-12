@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { Plus, Loader2, Users } from 'lucide-react';
 import ClientDossiersCard from '@/components/shared/ClientDossiersCard';
 import AddClientDossiers from '@/components/modal/AddClientDossiers';
 import { useGetClientsQuery } from '@/redux/features/app/app.api';
@@ -12,11 +13,19 @@ export default function ClientDossiersPage() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
-      {/* Top Header - Button Only */}
-      <div className="bg-white border border-neutral-200 rounded p-4 shadow-2xs flex justify-end">
+      {/* Top Header - Requested Clients Button Left & + Client Button Right */}
+      <div className="bg-white border border-neutral-200 rounded p-4 shadow-2xs flex items-center justify-between flex-wrap gap-3">
+        <Link
+          href="/requested-clients"
+          className="bg-[#ff3b30] hover:bg-red-600 text-white px-4 py-2 rounded text-xs font-extrabold uppercase tracking-wider flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+        >
+          <Users className="w-4 h-4" />
+          <span>REQUESTED CLIENTS</span>
+        </Link>
+
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="w-full sm:w-auto bg-[#1c1c1c] hover:bg-black text-white px-4 py-2 rounded text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+          className="bg-[#1c1c1c] hover:bg-black text-white px-4 py-2 rounded text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
         >
           <Plus className="w-4 h-4" />
           <span>CLIENT</span>
