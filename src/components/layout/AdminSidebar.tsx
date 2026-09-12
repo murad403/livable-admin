@@ -1,17 +1,8 @@
 'use client';
-
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  LayoutGrid,
-  Users,
-  Compass,
-  MessageSquare,
-  Settings,
-  LogOut,
-  X,
-} from 'lucide-react';
+import { LayoutGrid, Users, Compass, MessageSquare, Settings, LogOut, X } from 'lucide-react';
 
 interface NavItem {
   id: string;
@@ -120,17 +111,15 @@ export default function AdminSidebar({
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed lg:static top-0 left-0 z-50 bg-[#141414] text-white flex flex-col justify-between h-screen border-r border-neutral-800 shrink-0 select-none transition-all duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        } ${isCollapsed ? 'lg:w-16' : 'w-64'}`}
+        className={`fixed lg:static top-0 left-0 z-50 bg-[#141414] text-white flex flex-col justify-between h-screen border-r border-neutral-800 shrink-0 select-none transition-all duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          } ${isCollapsed ? 'lg:w-16' : 'w-64'}`}
       >
         {/* Top Header & Navigation */}
         <div className="flex flex-col flex-1 overflow-y-auto">
           {/* Brand Header */}
           <div
-            className={`p-4 border-b border-neutral-800/80 flex items-center ${
-              isCollapsed ? 'justify-center' : 'justify-between'
-            }`}
+            className={`p-4 border-b border-neutral-800/80 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'
+              }`}
           >
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-[#ff3b30] flex items-center justify-center font-black text-white text-xl rounded-sm tracking-tighter shrink-0 shadow-sm">
@@ -191,23 +180,20 @@ export default function AdminSidebar({
                         href={item.href}
                         onClick={onClose}
                         title={isCollapsed ? item.label : undefined}
-                        className={`flex items-center ${
-                          isCollapsed
+                        className={`flex items-center ${isCollapsed
                             ? 'justify-center p-2.5'
                             : 'justify-between px-3 py-2.5'
-                        } font-bold text-xs uppercase tracking-wider rounded-sm transition-colors group relative ${
-                          isActive
+                          } font-bold text-xs uppercase tracking-wider rounded-sm transition-colors group relative ${isActive
                             ? 'bg-[#ff3b30] text-white shadow-xs'
                             : 'text-neutral-300 hover:text-white hover:bg-neutral-800/50'
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-3">
                           <IconComponent
-                            className={`w-4 h-4 shrink-0 ${
-                              isActive
+                            className={`w-4 h-4 shrink-0 ${isActive
                                 ? 'text-white'
                                 : 'text-neutral-400 group-hover:text-white'
-                            }`}
+                              }`}
                           />
                           {!isCollapsed && <span>{item.label}</span>}
                         </div>
@@ -223,9 +209,8 @@ export default function AdminSidebar({
         {/* Sidebar Footer */}
         <div className="p-3 border-t border-neutral-800/80 bg-[#111111]">
           <div
-            className={`flex items-center ${
-              isCollapsed ? 'justify-center' : 'justify-between'
-            }`}
+            className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'
+              }`}
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-7 h-7 bg-[#ff3b30] flex items-center justify-center font-extrabold text-white text-xs rounded-xs shrink-0">
