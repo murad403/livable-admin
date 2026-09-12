@@ -1,14 +1,6 @@
 'use client';
-
-import React, { useState } from 'react';
-import {
-  ShieldAlert,
-  RotateCcw,
-  User,
-  Lock,
-  FileText,
-  AlertCircle,
-} from 'lucide-react';
+import { useState } from 'react';
+import { ShieldAlert, User, Lock, FileText, AlertCircle } from 'lucide-react';
 import ProfileTab from '@/components/app/ProfileTab';
 import SecurityTab from '@/components/app/SecurityTab';
 import PrivacyTab from '@/components/app/PrivacyTab';

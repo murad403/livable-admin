@@ -6,7 +6,9 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, LogIn, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
+import { useSignInMutation } from '@/redux/features/auth/auth.api';
+import { saveToken } from '@/utils/auth';
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Enter a valid email'),
@@ -19,23 +21,47 @@ export type SignInFormValues = z.infer<typeof signInSchema>;
 export default function SignInPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const [signIn, { isLoading }] = useSignInMutation();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: 'admin@livable.co',
-      password: '',
-      rememberMe: true,
+      email: 'unknownmr713@gmail.com',
+      password: '1234',
+      rememberMe: false,
     },
   });
 
-  const onSubmit = (data: SignInFormValues) => {
-    console.log('Signing in:', data);
-    router.push('/');
+  const onSubmit = async (data: SignInFormValues) => {
+    setErrorMessage(null);
+    try {
+      const res = await signIn({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+
+      if (res?.access) {
+        await saveToken(res.access, res.refresh);
+        router.push('/');
+        router.refresh();
+      } else {
+        setErrorMessage('Sign in failed. Access token was not received.');
+      }
+    } catch (err: any) {
+      console.error('Sign in error:', err);
+      const apiError =
+        err?.data?.detail ||
+        err?.data?.message ||
+        (Array.isArray(err?.data?.non_field_errors) && err.data.non_field_errors[0]) ||
+        'Invalid credentials or server error. Please try again.';
+      setErrorMessage(apiError);
+    }
   };
 
   return (
@@ -50,6 +76,14 @@ export default function SignInPage() {
         </p>
       </div>
 
+      {/* Error Alert */}
+      {errorMessage && (
+        <div className="flex items-center gap-2 p-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded">
+          <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
       {/* Sign In Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Email Field */}
@@ -61,7 +95,7 @@ export default function SignInPage() {
             <Mail className="w-4 h-4 text-neutral-400 absolute left-3 pointer-events-none" />
             <input
               type="email"
-              placeholder="admin@livable.co"
+              placeholder="admin@example.com"
               {...register('email')}
               className="w-full bg-neutral-50/80 border border-neutral-200 rounded pl-9 pr-3 py-2.5 text-xs text-neutral-800 font-mono placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
             />
@@ -129,11 +163,20 @@ export default function SignInPage() {
         <div className="pt-2">
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isLoading}
             className="w-full bg-[#1c1c1c] hover:bg-black text-white font-extrabold text-xs uppercase tracking-wider py-3 px-4 rounded transition-colors shadow-2xs cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            <span>SIGN IN TO OPS HUB</span>
-            <LogIn className="w-4 h-4" />
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>SIGNING IN...</span>
+              </>
+            ) : (
+              <>
+                <span>SIGN IN TO OPS HUB</span>
+                <LogIn className="w-4 h-4" />
+              </>
+            )}
           </button>
         </div>
       </form>
