@@ -1,55 +1,58 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import { Lock, AlertCircle, Loader2 } from 'lucide-react';
 import { useChangePasswordMutation } from '@/redux/features/auth/auth.api';
 import { removeToken } from '@/utils/auth';
 
+const changePasswordSchema = z
+  .object({
+    current_password: z.string().min(1, 'Current password is required'),
+    new_password: z.string().min(6, 'New password must be at least 6 characters'),
+    confirm_new_password: z.string().min(1, 'Confirm password is required'),
+  })
+  .refine((data) => data.new_password === data.confirm_new_password, {
+    message: 'New passwords do not match',
+    path: ['confirm_new_password'],
+  });
+
+export type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
+
 export default function SecurityTab() {
   const router = useRouter();
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
   const [changePassword, { isLoading }] = useChangePasswordMutation();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage(null);
-    setSuccessMessage(null);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ChangePasswordFormValues>({
+    resolver: zodResolver(changePasswordSchema),
+    defaultValues: {
+      current_password: '',
+      new_password: '',
+      confirm_new_password: '',
+    },
+  });
 
-    if (!currentPassword) {
-      setErrorMessage('Please enter your current password.');
-      return;
-    }
-    if (!newPassword || newPassword.length < 6) {
-      setErrorMessage('New password must be at least 6 characters.');
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      setErrorMessage('New passwords do not match.');
-      return;
-    }
-
+  const onSubmit = async (data: ChangePasswordFormValues) => {
     try {
       const res = await changePassword({
-        current_password: currentPassword,
-        new_password: newPassword,
-        confirm_new_password: confirmPassword,
+        current_password: data.current_password,
+        new_password: data.new_password,
+        confirm_new_password: data.confirm_new_password,
       }).unwrap();
 
       const detailMsg = res?.detail || 'Password updated successfully. Please log in again.';
-      setSuccessMessage(detailMsg);
+      toast.success(detailMsg);
+      reset();
 
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-
-      // Remove tokens and redirect to sign-in page
       setTimeout(async () => {
         await removeToken();
         router.push('/sign-in');
@@ -63,33 +66,17 @@ export default function SecurityTab() {
         (Array.isArray(err?.data?.current_password) && `Current password: ${err.data.current_password[0]}`) ||
         (Array.isArray(err?.data?.non_field_errors) && err.data.non_field_errors[0]) ||
         'Failed to update password. Please check your credentials and try again.';
-      setErrorMessage(apiError);
+      toast.error(apiError);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-xl">
       {/* Section Header */}
       <div className="flex items-center gap-2 text-xs font-extrabold text-neutral-800 uppercase tracking-wider border-b border-neutral-100 pb-3">
         <Lock className="w-4 h-4 text-[#ff3b30]" />
         <span>ADMIN SECURITY & PASSWORD UPDATE</span>
       </div>
-
-      {/* Success Message Banner */}
-      {successMessage && (
-        <div className="flex items-center gap-2 p-3 text-xs text-green-700 bg-green-50 border border-green-200 rounded">
-          <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
-          <span>{successMessage}</span>
-        </div>
-      )}
-
-      {/* Error Message Banner */}
-      {errorMessage && (
-        <div className="flex items-center gap-2 p-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded">
-          <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
-          <span>{errorMessage}</span>
-        </div>
-      )}
 
       {/* Form Inputs */}
       <div className="space-y-4">
@@ -101,11 +88,15 @@ export default function SecurityTab() {
           <input
             type="password"
             placeholder="Enter current password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
+            {...register('current_password')}
             disabled={isLoading}
             className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors font-mono disabled:opacity-50"
           />
+          {errors.current_password && (
+            <p className="text-[11px] text-red-500 mt-1 font-medium">
+              {errors.current_password.message}
+            </p>
+          )}
         </div>
 
         {/* NEW ADMIN PASSWORD */}
@@ -116,11 +107,15 @@ export default function SecurityTab() {
           <input
             type="password"
             placeholder="Minimum 6 characters"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            {...register('new_password')}
             disabled={isLoading}
             className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors font-mono disabled:opacity-50"
           />
+          {errors.new_password && (
+            <p className="text-[11px] text-red-500 mt-1 font-medium">
+              {errors.new_password.message}
+            </p>
+          )}
         </div>
 
         {/* CONFIRM NEW PASSWORD */}
@@ -131,11 +126,15 @@ export default function SecurityTab() {
           <input
             type="password"
             placeholder="Re-enter new password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            {...register('confirm_new_password')}
             disabled={isLoading}
             className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors font-mono disabled:opacity-50"
           />
+          {errors.confirm_new_password && (
+            <p className="text-[11px] text-red-500 mt-1 font-medium">
+              {errors.confirm_new_password.message}
+            </p>
+          )}
         </div>
       </div>
 
