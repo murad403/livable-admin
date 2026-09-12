@@ -1,7 +1,6 @@
 import { getCurrentUser } from "@/utils/auth";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-
 const baseQuery = fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
     prepareHeaders: async (headers) => {
@@ -11,15 +10,13 @@ const baseQuery = fetchBaseQuery({
         }
         return headers;
     }
-})
-
-
+});
 
 const baseApi = createApi({
     reducerPath: "baseApi",
     baseQuery: baseQuery,
-    tagTypes: [],
+    tagTypes: ["Clients"],
     endpoints: () => ({})
-})
+});
 
 export default baseApi;

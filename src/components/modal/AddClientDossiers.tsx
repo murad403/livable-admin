@@ -4,59 +4,71 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { UserPlus, X } from 'lucide-react';
+import { toast } from 'sonner';
+import { UserPlus, X, Loader2 } from 'lucide-react';
+import { useCreateClientMutation } from '@/redux/features/app/app.api';
 
-const addDossierSchema = z.object({
-  clientName: z.string().min(2, 'Client full name is required'),
+const addClientSchema = z.object({
+  full_name: z.string().min(1, 'Full name is required'),
   email: z.string().email('Valid email address is required'),
-  phone: z.string().optional(),
-  destination: z.string().min(1, 'Target destination is required'),
-  visaTrack: z.string().optional(),
-  arrivalTimeline: z.string().optional(),
-  householdSize: z.string().optional(),
-  advisor: z.string().min(1, 'Lead advisor is required'),
+  phone: z.string().min(1, 'Phone is required'),
+  target_destination: z.string().min(1, 'Target destination is required'),
+  visa: z.string().min(1, 'Visa is required'),
+  target_arrival_timeline: z.string().min(1, 'Target arrival timeline is required'),
+  household_size: z.string().min(1, 'Household size is required'),
+  lead_advisor_name: z.string().min(1, 'Lead advisor name is required'),
   notes: z.string().optional(),
 });
 
-export type AddDossierFormValues = z.infer<typeof addDossierSchema>;
+export type AddClientFormValues = z.infer<typeof addClientSchema>;
 
 interface AddClientDossiersProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: AddDossierFormValues) => void;
 }
 
 export default function AddClientDossiers({
   isOpen,
   onClose,
-  onSubmit,
 }: AddClientDossiersProps) {
+  const [createClient, { isLoading }] = useCreateClientMutation();
+
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
-  } = useForm<AddDossierFormValues>({
-    resolver: zodResolver(addDossierSchema),
+    formState: { errors },
+  } = useForm<AddClientFormValues>({
+    resolver: zodResolver(addClientSchema),
     defaultValues: {
-      clientName: '',
+      full_name: '',
       email: '',
       phone: '',
-      destination: 'VALENCIA & PORTO',
-      visaTrack: 'Beckham Law / Spanish Digital Nomad',
-      arrivalTimeline: 'October 2026 Arrival',
-      householdSize: 'Couple',
-      advisor: 'TIAGO SANTOS (VALENCIA LEAD)',
+      target_destination: '',
+      visa: '',
+      target_arrival_timeline: '',
+      household_size: '',
+      lead_advisor_name: '',
       notes: '',
     },
   });
 
   if (!isOpen) return null;
 
-  const handleFormSubmit = (data: AddDossierFormValues) => {
-    onSubmit(data);
-    reset();
-    onClose();
+  const handleFormSubmit = async (data: AddClientFormValues) => {
+    try {
+      await createClient(data).unwrap();
+      toast.success('Client dossier created successfully!');
+      reset();
+      onClose();
+    } catch (err: any) {
+      console.error('Failed to create client dossier:', err);
+      const errorMsg =
+        err?.data?.detail ||
+        err?.data?.message ||
+        'Failed to create client dossier. Please try again.';
+      toast.error(errorMsg);
+    }
   };
 
   return (
@@ -81,33 +93,35 @@ export default function AddClientDossiers({
         {/* Form Body */}
         <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Field 1: CLIENT FULL NAME(S) * */}
+            {/* FULL NAME */}
             <div>
               <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                CLIENT FULL NAME(S) *
+                FULL NAME *
               </label>
               <input
                 type="text"
-                placeholder="e.g. Alex & Sarah Vance"
-                {...register('clientName')}
+                placeholder="e.g. Jane smith"
+                {...register('full_name')}
+                disabled={isLoading}
                 className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
               />
-              {errors.clientName && (
+              {errors.full_name && (
                 <p className="text-[11px] text-red-500 mt-0.5 font-medium">
-                  {errors.clientName.message}
+                  {errors.full_name.message}
                 </p>
               )}
             </div>
 
-            {/* Field 2: CLIENT EMAIL ADDRESS * */}
+            {/* EMAIL */}
             <div>
               <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                CLIENT EMAIL ADDRESS *
+                EMAIL ADDRESS *
               </label>
               <input
                 type="email"
-                placeholder="e.g. alex.vance@example.com"
+                placeholder="e.g. murad@gmail.com"
                 {...register('email')}
+                disabled={isLoading}
                 className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
               />
               {errors.email && (
@@ -117,114 +131,132 @@ export default function AddClientDossiers({
               )}
             </div>
 
-            {/* Field 3: PHONE */}
+            {/* PHONE */}
             <div>
               <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                PHONE (US OR WHATSAPP)
+                PHONE *
               </label>
               <input
                 type="text"
-                placeholder="+1 (555) 019-2834"
+                placeholder="e.g. +1987654321"
                 {...register('phone')}
+                disabled={isLoading}
                 className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
               />
+              {errors.phone && (
+                <p className="text-[11px] text-red-500 mt-0.5 font-medium">
+                  {errors.phone.message}
+                </p>
+              )}
             </div>
 
-            {/* Field 4: TARGET DESTINATION */}
+            {/* TARGET DESTINATION */}
             <div>
               <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                TARGET DESTINATION
-              </label>
-              <select
-                {...register('destination')}
-                className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 font-bold uppercase focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
-              >
-                <option value="VALENCIA & PORTO">VALENCIA & PORTO</option>
-                <option value="LISBON & CASCAIS">LISBON & CASCAIS</option>
-                <option value="MADRID (SALAMANCA / CHAMBERÍ)">
-                  MADRID (SALAMANCA / CHAMBERÍ)
-                </option>
-                <option value="PORTO (FOZ DO DOURO)">PORTO (FOZ DO DOURO)</option>
-                <option value="BARCELONA (SARRIÀ-SANT GERVASI)">
-                  BARCELONA (SARRIÀ-SANT GERVASI)
-                </option>
-              </select>
-            </div>
-
-            {/* Field 5: VISA & TAX TRACK */}
-            <div>
-              <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                VISA & TAX TRACK
+                TARGET DESTINATION *
               </label>
               <input
                 type="text"
-                placeholder="Beckham Law / Spanish Digital Nomad"
-                {...register('visaTrack')}
+                placeholder="e.g. Lisbon"
+                {...register('target_destination')}
+                disabled={isLoading}
                 className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
               />
+              {errors.target_destination && (
+                <p className="text-[11px] text-red-500 mt-0.5 font-medium">
+                  {errors.target_destination.message}
+                </p>
+              )}
             </div>
 
-            {/* Field 6: TARGET ARRIVAL TIMELINE */}
+            {/* VISA */}
             <div>
               <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                TARGET ARRIVAL TIMELINE
+                VISA *
               </label>
               <input
                 type="text"
-                placeholder="October 2026 Arrival"
-                {...register('arrivalTimeline')}
+                placeholder="e.g. D7 Visa"
+                {...register('visa')}
+                disabled={isLoading}
                 className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
               />
+              {errors.visa && (
+                <p className="text-[11px] text-red-500 mt-0.5 font-medium">
+                  {errors.visa.message}
+                </p>
+              )}
             </div>
 
-            {/* Field 7: HOUSEHOLD SIZE */}
+            {/* TARGET ARRIVAL TIMELINE */}
             <div>
               <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                HOUSEHOLD SIZE
+                TARGET ARRIVAL TIMELINE *
               </label>
               <input
                 type="text"
-                placeholder="Couple"
-                {...register('householdSize')}
+                placeholder="e.g. October 2026 Arrival"
+                {...register('target_arrival_timeline')}
+                disabled={isLoading}
                 className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
               />
+              {errors.target_arrival_timeline && (
+                <p className="text-[11px] text-red-500 mt-0.5 font-medium">
+                  {errors.target_arrival_timeline.message}
+                </p>
+              )}
             </div>
 
-            {/* Field 8: ASSIGNED LEAD ADVISOR */}
+            {/* HOUSEHOLD SIZE */}
             <div>
               <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                ASSIGNED LEAD ADVISOR
+                HOUSEHOLD SIZE *
               </label>
-              <select
-                {...register('advisor')}
-                className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 font-bold uppercase focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
-              >
-                <option value="TIAGO SANTOS (VALENCIA LEAD)">
-                  TIAGO SANTOS (VALENCIA LEAD)
-                </option>
-                <option value="SOFIA MENDES (LISBON SCOUT)">
-                  SOFIA MENDES (LISBON SCOUT)
-                </option>
-                <option value="CARLOS ALMODOVAR (MADRID LEAD)">
-                  CARLOS ALMODOVAR (MADRID LEAD)
-                </option>
-                <option value="MARTA PUJOL (BARCELONA LEAD)">
-                  MARTA PUJOL (BARCELONA LEAD)
-                </option>
-              </select>
+              <input
+                type="text"
+                placeholder="e.g. 2"
+                {...register('household_size')}
+                disabled={isLoading}
+                className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
+              />
+              {errors.household_size && (
+                <p className="text-[11px] text-red-500 mt-0.5 font-medium">
+                  {errors.household_size.message}
+                </p>
+              )}
+            </div>
+
+            {/* LEAD ADVISOR NAME */}
+            <div>
+              <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
+                LEAD ADVISOR NAME *
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Sarah Guide"
+                {...register('lead_advisor_name')}
+                disabled={isLoading}
+                className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
+              />
+              {errors.lead_advisor_name && (
+                <p className="text-[11px] text-red-500 mt-0.5 font-medium">
+                  {errors.lead_advisor_name.message}
+                </p>
+              )}
             </div>
           </div>
 
-          {/* Field 9: INITIAL DOSSIER NOTES & MICRO-DISTRICT PREFERENCES */}
+          {/* NOTES */}
           <div>
             <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-              INITIAL DOSSIER NOTES & MICRO-DISTRICT PREFERENCES
+              DOSSIER NOTES & PREFERENCES
             </label>
-            <textarea
-              rows={3}
-              placeholder="Specific requirements: bilingual schools, walkability, fiber internet, pet-friendly lease..."
+            <input
+              type="text"
+              placeholder="e.g. Interested in food and culture."
               {...register('notes')}
-              className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors resize-none"
+              disabled={isLoading}
+              className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
             />
           </div>
 
@@ -233,16 +265,24 @@ export default function AddClientDossiers({
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2.5 border border-neutral-200 rounded text-xs font-bold text-neutral-600 hover:bg-neutral-50 uppercase tracking-wider transition-colors cursor-pointer"
+              disabled={isLoading}
+              className="px-6 py-2.5 border border-neutral-200 rounded text-xs font-bold text-neutral-600 hover:bg-neutral-50 uppercase tracking-wider transition-colors cursor-pointer disabled:opacity-50"
             >
               CANCEL
             </button>
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="px-6 py-2.5 bg-[#ff3b30] hover:bg-red-600 text-white rounded text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+              disabled={isLoading}
+              className="px-6 py-2.5 bg-[#ff3b30] hover:bg-red-600 text-white rounded text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs disabled:opacity-50 flex items-center gap-2"
             >
-              CREATE CLIENT DOSSIER
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>CREATING...</span>
+                </>
+              ) : (
+                <span>CREATE CLIENT DOSSIER</span>
+              )}
             </button>
           </div>
         </form>
