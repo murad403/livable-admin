@@ -8,10 +8,6 @@ import {
   Users,
   Compass,
   MessageSquare,
-  UserCheck,
-  BookOpen,
-  BarChart2,
-  Bell,
   Settings,
   LogOut,
   X,
@@ -22,10 +18,6 @@ interface NavItem {
   label: string;
   href: string;
   icon: React.ElementType;
-  badge?: {
-    text: string;
-    variant: 'default' | 'danger';
-  };
 }
 
 interface NavGroup {
@@ -50,21 +42,18 @@ const navGroups: NavGroup[] = [
         label: 'CLIENT DOSSIERS',
         href: '/client-dossiers',
         icon: Users,
-        badge: { text: '5', variant: 'default' },
       },
       {
         id: 'scouting-trips',
         label: 'SCOUTING TRIPS',
         href: '/scouting-trips',
         icon: Compass,
-        badge: { text: '3', variant: 'danger' },
       },
       {
         id: 'support-queue',
         label: 'SUPPORT QUEUE',
         href: '/support-queue',
         icon: MessageSquare,
-        badge: { text: '2', variant: 'danger' },
       },
     ],
   },
@@ -222,23 +211,6 @@ export default function AdminSidebar({
                           />
                           {!isCollapsed && <span>{item.label}</span>}
                         </div>
-
-                        {/* Badge if present */}
-                        {item.badge && (
-                          <span
-                            className={`text-[11px] font-bold flex items-center justify-center rounded-xs ${
-                              isCollapsed
-                                ? 'absolute -top-1 -right-1 w-4 h-4 text-[9px] rounded-full'
-                                : 'w-5 h-5'
-                            } ${
-                              item.badge.variant === 'danger'
-                                ? 'bg-[#ff3b30] text-white'
-                                : 'bg-[#1f1f1f] border border-neutral-700 text-white'
-                            }`}
-                          >
-                            {item.badge.text}
-                          </span>
-                        )}
                       </Link>
                     );
                   })}
@@ -262,10 +234,7 @@ export default function AdminSidebar({
               {!isCollapsed && (
                 <div className="flex flex-col min-w-0">
                   <span className="text-xs font-bold text-white uppercase tracking-wider truncate">
-                    LIVABLE OPERATIONS L...
-                  </span>
-                  <span className="text-[10px] text-neutral-400 truncate font-mono">
-                    admin@livable.co
+                    LIVABLE OPERATIONS
                   </span>
                 </div>
               )}
