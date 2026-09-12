@@ -1,10 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
-import DestinationsCard, {
-  DestinationData,
-} from '@/components/shared/DestinationsCard';
+import DestinationsCard, { DestinationData } from '@/components/shared/DestinationsCard';
 import UpdateDestinationsStatus from '@/components/modal/UpdateDestinationsStatus';
 
 const initialDestinations: DestinationData[] = [
@@ -106,11 +104,11 @@ export default function DestinationsPage() {
       prev.map((item) =>
         item.id === id
           ? {
-              ...item,
-              status:
-                newStatus.charAt(0).toUpperCase() +
-                newStatus.slice(1).toLowerCase(),
-            }
+            ...item,
+            status:
+              newStatus.charAt(0).toUpperCase() +
+              newStatus.slice(1).toLowerCase(),
+          }
           : item
       )
     );
