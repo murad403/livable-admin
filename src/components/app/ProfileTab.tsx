@@ -1,20 +1,31 @@
 'use client';
-import React, { useState } from 'react';
+
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { User, Mail, Save } from 'lucide-react';
+import { profileSchema, ProfileFormValues } from '@/validation/validation';
+import { toast } from 'sonner';
 
 export default function ProfileTab() {
-  const [formData, setFormData] = useState({
-    fullName: 'Livable Operations Lead',
-    email: 'admin@livable.co'
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      fullName: 'Livable Operations Lead',
+      email: 'admin@livable.co',
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert('Admin Profile changes saved successfully!');
+  const onSubmit = (data: ProfileFormValues) => {
+    toast.success('Admin Profile changes saved successfully!');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Section Header */}
       <div className="flex items-center gap-2 text-xs font-extrabold text-neutral-800 uppercase tracking-wider border-b border-neutral-100 pb-3">
         <User className="w-4 h-4 text-[#ff3b30]" />
@@ -31,10 +42,14 @@ export default function ProfileTab() {
           </label>
           <input
             type="text"
-            value={formData.fullName}
-            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+            {...register('fullName')}
             className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 font-medium focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
           />
+          {errors.fullName && (
+            <p className="text-[11px] text-red-500 mt-1 font-medium">
+              {errors.fullName.message}
+            </p>
+          )}
         </div>
 
         {/* ADMINISTRATIVE EMAIL */}
@@ -45,10 +60,14 @@ export default function ProfileTab() {
           </label>
           <input
             type="email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            {...register('email')}
             className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 font-mono focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors"
           />
+          {errors.email && (
+            <p className="text-[11px] text-red-500 mt-1 font-medium">
+              {errors.email.message}
+            </p>
+          )}
         </div>
       </div>
 
@@ -56,7 +75,8 @@ export default function ProfileTab() {
       <div className="flex justify-end pt-2">
         <button
           type="submit"
-          className="bg-[#1c1c1c] hover:bg-black text-white px-6 py-2.5 rounded text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer shadow-xs"
+          disabled={isSubmitting}
+          className="bg-[#1c1c1c] hover:bg-black text-white px-6 py-2.5 rounded text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer shadow-xs disabled:opacity-50"
         >
           <Save className="w-4 h-4" />
           <span>SAVE ADMIN PROFILE CHANGES</span>

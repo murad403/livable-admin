@@ -1,31 +1,20 @@
 'use client';
-import React, { Suspense } from 'react'
+import { Suspense } from 'react'
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { ShieldCheck, ArrowLeft, RotateCw } from 'lucide-react';
+import { VerifyOtpFormValues, verifyOtpSchema } from '@/validation/validation';
 
-const verifyOtpSchema = z.object({
-  otp: z
-    .string()
-    .length(6, 'OTP code must be exactly 6 digits')
-    .regex(/^\d+$/, 'OTP code must contain only numbers'),
-});
 
-export type VerifyOtpFormValues = z.infer<typeof verifyOtpSchema>;
 
 function VerifyOtpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || 'admin@livable.co';
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<VerifyOtpFormValues>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<VerifyOtpFormValues>({
     resolver: zodResolver(verifyOtpSchema),
     defaultValues: {
       otp: '',
@@ -118,7 +107,7 @@ function VerifyOtpPage() {
 const page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <VerifyOtpPage/>
+      <VerifyOtpPage />
     </Suspense>
   )
 }

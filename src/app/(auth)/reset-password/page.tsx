@@ -1,37 +1,20 @@
 'use client';
-
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Lock, ArrowLeft, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { ResetPasswordFormValues, resetPasswordSchema } from '@/validation/validation';
 
-const resetPasswordSchema = z
-  .object({
-    newPassword: z.string().min(6, 'New password must be at least 6 characters'),
-    confirmPassword: z
-      .string()
-      .min(6, 'Confirm password must be at least 6 characters'),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
 
-export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPasswordPage() {
   const router = useRouter();
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<ResetPasswordFormValues>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       newPassword: '',

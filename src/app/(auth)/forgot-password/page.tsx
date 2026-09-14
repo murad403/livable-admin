@@ -3,23 +3,15 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Mail, ArrowLeft, Send } from 'lucide-react';
+import { ForgotPasswordFormValues, forgotPasswordSchema } from '@/validation/validation';
 
-const forgotPasswordSchema = z.object({
-  email: z.string().email('Valid email address is required'),
-});
 
-export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<ForgotPasswordFormValues>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: '',

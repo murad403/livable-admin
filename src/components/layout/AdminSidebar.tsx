@@ -1,8 +1,9 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { LayoutGrid, Users, Compass, MessageSquare, Settings, LogOut, X } from 'lucide-react';
+import { removeToken } from '@/utils/auth';
 
 interface NavItem {
   id: string;
@@ -48,34 +49,10 @@ const navGroups: NavGroup[] = [
       },
     ],
   },
-  // {
-  //   id: 'directory-hubs',
-  //   title: 'DIRECTORY & HUBS',
-  //   items: [
-  //     {
-  //       id: 'user-directory',
-  //       label: 'USER DIRECTORY',
-  //       href: '/user-directory',
-  //       icon: UserCheck,
-  //     },
-  //     {
-  //       id: 'destinations',
-  //       label: 'DESTINATIONS',
-  //       href: '/destinations',
-  //       icon: BookOpen,
-  //     },
-  //   ],
-  // },
   {
     id: 'reports-config',
     title: 'CONFIG',
     items: [
-      // {
-      //   id: 'analytics',
-      //   label: 'ANALYTICS',
-      //   href: '/analytics',
-      //   icon: BarChart2,
-      // },
       {
         id: 'settings',
         label: 'SETTINGS',
@@ -98,6 +75,12 @@ export default function AdminSidebar({
   onClose,
 }: AdminSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await removeToken();
+    router.push('/sign-in');
+  };
 
   return (
     <>
@@ -226,8 +209,9 @@ export default function AdminSidebar({
             </div>
             {!isCollapsed && (
               <button
+                onClick={handleLogout}
                 title="Log out"
-                className="p-1.5 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded transition-colors"
+                className="p-1.5 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded transition-colors cursor-pointer"
               >
                 <LogOut className="w-4 h-4" />
               </button>
