@@ -1,9 +1,7 @@
-import React from 'react';
 import OverviewStats from '@/components/app/OverviewStats';
 import ActiveClient from '@/components/app/ActiveClient';
 import QuickActions from '@/components/app/QuickActions';
 import UpcomingTrips from '@/components/app/UpcomingTrips';
-import RecentActivity from '@/components/app/RecentActivity';
 
 export default function OverviewPage() {
   return (
@@ -22,7 +20,6 @@ export default function OverviewPage() {
         <div className="lg:col-span-4 space-y-6">
           <QuickActions />
           <UpcomingTrips />
-          <RecentActivity />
         </div>
       </div>
     </div>
