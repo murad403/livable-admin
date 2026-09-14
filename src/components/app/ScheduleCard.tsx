@@ -19,6 +19,22 @@ export default function ScheduleCard({ schedule, onEditItem, onDeleteSchedule }:
             .slice(0, 2);
     };
 
+    const formatItemType = (type?: string) => {
+        if (!type) return 'EVENT';
+        switch (type.toLowerCase()) {
+            case 'meeting':
+                return 'Meeting';
+            case 'recommendation':
+                return 'Recommendation';
+            case 'open_time':
+                return 'Open Time';
+            case 'hotel':
+                return 'Hotel';
+            default:
+                return type.replace('_', ' ');
+        }
+    };
+
     return (
         <div className="bg-white border border-neutral-200 rounded-sm shadow-2xs overflow-hidden flex flex-col hover:border-neutral-300 transition-all duration-200">
             {/* Card Header: Client Info & Schedule Metadata */}
@@ -84,7 +100,7 @@ export default function ScheduleCard({ schedule, onEditItem, onDeleteSchedule }:
                                         <span>{item.start_time}</span>
                                     </div>
                                     <span className="px-2.5 py-0.5 bg-red-50 text-[#ff3b30] border border-red-100 rounded text-[10px] font-extrabold uppercase tracking-wider">
-                                        {item.item_type || item.type || 'EVENT'}
+                                        {formatItemType(item.item_type || item.type)}
                                     </span>
                                     {item.order ? (
                                         <span className="text-[10px] font-semibold text-neutral-400">

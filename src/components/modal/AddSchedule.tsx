@@ -22,7 +22,7 @@ export default function AddSchedule({ isOpen, onClose }: AddScheduleProps) {
             date: new Date().toISOString().split('T')[0],
             start_time: '09:00',
             title: '',
-            item_type: '',
+            item_type: 'meeting',
             short_description: '',
             description: '',
             host_name: '',
@@ -166,15 +166,18 @@ export default function AddSchedule({ isOpen, onClose }: AddScheduleProps) {
                                 <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1">
                                     Item Type <span className="text-[#ff3b30]">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. meeting, tour, food"
+                                <select
                                     {...register('item_type')}
-                                    className={`w-full px-3 py-2 bg-white border text-xs text-neutral-900 rounded focus:outline-none transition-colors ${errors.item_type
+                                    className={`w-full px-3 py-2 bg-white border text-xs text-neutral-900 rounded focus:outline-none transition-colors cursor-pointer ${errors.item_type
                                             ? 'border-red-500 focus:border-red-500'
                                             : 'border-neutral-200 focus:border-neutral-400'
                                         }`}
-                                />
+                                >
+                                    <option value="meeting">Meeting</option>
+                                    <option value="recommendation">Recommendation</option>
+                                    <option value="open_time">Open Time</option>
+                                    <option value="hotel">Hotel</option>
+                                </select>
                                 {errors.item_type && (
                                     <p className="mt-1 text-[11px] font-semibold text-red-500">
                                         {errors.item_type.message}
