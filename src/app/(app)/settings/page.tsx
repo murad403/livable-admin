@@ -1,13 +1,10 @@
 'use client';
 import { useState } from 'react';
-import { ShieldAlert, User, Lock, FileText, AlertCircle } from 'lucide-react';
+import { ShieldAlert, User, Lock } from 'lucide-react';
 import ProfileTab from '@/components/app/ProfileTab';
 import SecurityTab from '@/components/app/SecurityTab';
-import PrivacyTab from '@/components/app/PrivacyTab';
-import TermsTab from '@/components/app/TermsTab';
-import Disclaimer from '@/components/app/Disclaimer';
 
-type SettingsTab = 'profile' | 'security' | 'privacy' | 'terms' | 'disclaimer';
+type SettingsTab = 'profile' | 'security';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
@@ -16,9 +13,6 @@ export default function SettingsPage() {
     const isActive = activeTab === tabKey;
     if (!isActive) {
       return 'bg-white text-neutral-600 border border-neutral-200 hover:bg-neutral-50 font-bold';
-    }
-    if (tabKey === 'privacy' || tabKey === 'terms' || tabKey === 'disclaimer') {
-      return 'bg-[#ff3b30] text-white font-extrabold border-[#ff3b30] shadow-2xs';
     }
     return 'bg-[#1c1c1c] text-white font-extrabold border-[#1c1c1c] shadow-2xs';
   };
@@ -33,9 +27,6 @@ export default function SettingsPage() {
             <h1 className="text-sm font-extrabold text-neutral-900 uppercase tracking-wider">
               ADMIN SETTINGS & PLATFORM GOVERNANCE
             </h1>
-            <p className="text-xs text-neutral-400 font-medium">
-              Manage administrative profile, credential security, and live legal compliance pages (Privacy Policy, Terms of Service, Legal Disclaimer).
-            </p>
           </div>
         </div>
       </div>
@@ -61,45 +52,12 @@ export default function SettingsPage() {
           <Lock className="w-4 h-4" />
           <span>SECURITY & PASSWORD</span>
         </button>
-
-        <button
-          onClick={() => setActiveTab('privacy')}
-          className={`px-4 py-2.5 rounded-xs text-xs uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${getTabButtonStyle(
-            'privacy'
-          )}`}
-        >
-          <FileText className="w-4 h-4" />
-          <span>PRIVACY POLICY PAGE</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('terms')}
-          className={`px-4 py-2.5 rounded-xs text-xs uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${getTabButtonStyle(
-            'terms'
-          )}`}
-        >
-          <FileText className="w-4 h-4" />
-          <span>TERMS OF SERVICE PAGE</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('disclaimer')}
-          className={`px-4 py-2.5 rounded-xs text-xs uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${getTabButtonStyle(
-            'disclaimer'
-          )}`}
-        >
-          <AlertCircle className="w-4 h-4" />
-          <span>LEGAL DISCLAIMER PAGE</span>
-        </button>
       </div>
 
       {/* Main Tab Content Card */}
       <div className="bg-white border border-neutral-200 rounded p-6 shadow-2xs">
         {activeTab === 'profile' && <ProfileTab />}
         {activeTab === 'security' && <SecurityTab />}
-        {activeTab === 'privacy' && <PrivacyTab />}
-        {activeTab === 'terms' && <TermsTab />}
-        {activeTab === 'disclaimer' && <Disclaimer />}
       </div>
     </div>
   );

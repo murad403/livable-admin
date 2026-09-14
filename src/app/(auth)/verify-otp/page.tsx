@@ -1,4 +1,5 @@
 'use client';
+import React, { Suspense } from 'react'
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -15,7 +16,7 @@ const verifyOtpSchema = z.object({
 
 export type VerifyOtpFormValues = z.infer<typeof verifyOtpSchema>;
 
-export default function VerifyOtpPage() {
+function VerifyOtpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || 'admin@livable.co';
@@ -112,3 +113,14 @@ export default function VerifyOtpPage() {
     </div>
   );
 }
+
+
+const page = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyOtpPage/>
+    </Suspense>
+  )
+}
+
+export default page
