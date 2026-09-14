@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutGrid, Users, Compass, MessageSquare, Settings, LogOut, X, FlaskConical } from 'lucide-react';
+import { LayoutGrid, Users, Compass, MessageSquare, Settings, LogOut, X, FlaskConical, Calendar } from 'lucide-react';
 import { removeToken } from '@/utils/auth';
 import { useGetMeQuery } from '@/redux/features/auth/auth.api';
 
@@ -47,6 +47,12 @@ const navGroups: NavGroup[] = [
         label: 'CITY TEST',
         href: '/city-test',
         icon: FlaskConical,
+      },
+      {
+        id: 'schedule',
+        label: 'SCHEDULE',
+        href: '/schedule',
+        icon: Calendar,
       },
       {
         id: 'support-queue',
