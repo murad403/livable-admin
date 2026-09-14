@@ -122,5 +122,66 @@ export interface TUpdateCityTestInput {
   data: Partial<TCreateCityTestInput>;
 }
 
+export interface TScheduleItem {
+  id?: string;
+  type?: string;
+  item_type: string;
+  start_time: string;
+  end_time?: string | null;
+  title: string;
+  short_description: string;
+  description: string;
+  host_name?: string | null;
+  meeting_point?: string | null;
+  what_to_bring?: string | null;
+  google_maps_link?: string | null;
+  restaurant_link?: string | null;
+  phone?: string | null;
+  website?: string | null;
+  reminder?: string | null;
+  order: number;
+  schedule?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface TSchedule {
+  id: number;
+  date: string;
+  client_id: number;
+  client_name: string;
+  client_email: string;
+  client_image?: string | null;
+  items_count: number;
+  items: TScheduleItem[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface TCreateScheduleInput {
+  clientId: number;
+  data: {
+    date: string;
+    items: {
+      start_time: string;
+      title: string;
+      item_type: string;
+      short_description: string;
+      description: string;
+      host_name?: string;
+      meeting_point?: string;
+      what_to_bring?: string;
+      google_maps_link?: string;
+      order?: number;
+    }[];
+  };
+}
+
+export interface TUpdateScheduleItemInput {
+  itemId: string;
+  data: Partial<TScheduleItem>;
+}
+
+
 
 

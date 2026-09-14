@@ -11,6 +11,10 @@ import {
     TCityTest,
     TCreateCityTestInput,
     TUpdateCityTestInput,
+    TSchedule,
+    TScheduleItem,
+    TCreateScheduleInput,
+    TUpdateScheduleItemInput,
 } from "./app.type";
 
 const appApi = baseApi.injectEndpoints({
@@ -103,6 +107,36 @@ const appApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["CityTests"],
         }),
+        getSchedules: builder.query<TSchedule[], void>({
+            query: () => ({
+                url: "/admin/todays/",
+                method: "GET",
+            }),
+            providesTags: ["Schedules"],
+        }),
+        createSchedule: builder.mutation<TSchedule, TCreateScheduleInput>({
+            query: ({ clientId, data }) => ({
+                url: `/admin/today/${clientId}/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["Schedules"],
+        }),
+        updateScheduleItem: builder.mutation<TScheduleItem, TUpdateScheduleItemInput>({
+            query: ({ itemId, data }) => ({
+                url: `/admin/today/item/${itemId}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["Schedules"],
+        }),
+        deleteSchedule: builder.mutation<void, number>({
+            query: (scheduleId) => ({
+                url: `/admin/todays/${scheduleId}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Schedules"],
+        }),
     }),
 });
 
@@ -119,4 +153,8 @@ export const {
     useCreateCityTestMutation,
     useUpdateCityTestMutation,
     useDeleteCityTestMutation,
+    useGetSchedulesQuery,
+    useCreateScheduleMutation,
+    useUpdateScheduleItemMutation,
+    useDeleteScheduleMutation,
 } = appApi;
