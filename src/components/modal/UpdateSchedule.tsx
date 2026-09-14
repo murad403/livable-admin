@@ -6,4 +6,4 @@ const UpdateSchedule = () => {
   )
 }
 
-export default UpdateSchedule
+export default UpdateSchedule;

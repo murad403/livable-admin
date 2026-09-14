@@ -6,4 +6,4 @@ const ScheduleCard = () => {
   )
 }
 
-export default ScheduleCard
+export default ScheduleCard;

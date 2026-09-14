@@ -6,4 +6,4 @@ const AddSchedule = () => {
   )
 }
 
-export default AddSchedule
+export default AddSchedule;

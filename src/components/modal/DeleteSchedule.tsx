@@ -6,4 +6,4 @@ const DeleteSchedule = () => {
   )
 }
 
-export default DeleteSchedule
+export default DeleteSchedule;
