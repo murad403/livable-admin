@@ -77,3 +77,10 @@ export interface TDeleteScoutingTripInput {
   id: number;
 }
 
+export interface TScoutingTripsResponse {
+  total_clients: number;
+  total_trips: number;
+  trips: TScoutingTrip[];
+}
+
+

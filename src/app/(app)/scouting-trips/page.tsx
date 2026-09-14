@@ -10,17 +10,23 @@ import { useGetScoutingTripsQuery } from '@/redux/features/app/app.api';
 import { TScoutingTrip } from '@/redux/features/app/app.type';
 
 export default function ScoutingTripsPage() {
-  const { data: trips, isLoading, isError } = useGetScoutingTripsQuery();
+  const { data: response, isLoading, isError } = useGetScoutingTripsQuery();
 
   // Modal States
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingTrip, setEditingTrip] = useState<TScoutingTrip | null>(null);
   const [deletingTrip, setDeletingTrip] = useState<TScoutingTrip | null>(null);
 
+  const tripList = Array.isArray(response?.trips)
+    ? response.trips
+    : Array.isArray(response)
+    ? response
+    : [];
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Top Action Header */}
-      <div className="bg-white border border-neutral-200 rounded p-4 shadow-2xs flex items-center justify-between gap-4">
+      <div className="bg-[#ffffff] border border-neutral-200 rounded p-4 shadow-2xs flex items-center justify-between gap-4">
         <div>
           <h1 className="text-base font-extrabold text-neutral-900 uppercase tracking-wider">
             SCOUTING TRIPS
@@ -50,9 +56,9 @@ export default function ScoutingTripsPage() {
         <div className="bg-white border border-neutral-200 rounded p-12 text-center text-red-500 text-sm font-medium">
           Failed to load scouting trips. Please check your network connection.
         </div>
-      ) : trips && trips.length > 0 ? (
+      ) : tripList.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {trips.map((trip) => (
+          {tripList.map((trip) => (
             <ScoutingTripsCard
               key={trip.id}
               trip={trip}

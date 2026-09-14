@@ -4,6 +4,7 @@ import {
     TCreateClientInput,
     TRequestedClient,
     TScoutingTrip,
+    TScoutingTripsResponse,
     TCreateScoutingTripInput,
     TUpdateScoutingTripInput,
     TDeleteScoutingTripInput,
@@ -32,7 +33,7 @@ const appApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
-        getScoutingTrips: builder.query<TScoutingTrip[], void>({
+        getScoutingTrips: builder.query<TScoutingTripsResponse, void>({
             query: () => ({
                 url: "/trips/",
                 method: "GET",
@@ -62,6 +63,13 @@ const appApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Trips"],
         }),
+        getUpcomingTrips: builder.query<TScoutingTrip[], void>({
+            query: () => ({
+                url: "/trips/upcoming/",
+                method: "GET",
+            }),
+            providesTags: ["Trips"],
+        }),
     }),
 });
 
@@ -70,6 +78,7 @@ export const {
     useCreateClientMutation,
     useGetRequestedClientsQuery,
     useGetScoutingTripsQuery,
+    useGetUpcomingTripsQuery,
     useCreateScoutingTripMutation,
     useUpdateScoutingTripMutation,
     useDeleteScoutingTripMutation,
