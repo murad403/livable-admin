@@ -21,8 +21,10 @@ export default function SignInPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: 'unknownmr713@gmail.com',
-      password: '1234',
+      // email: 'unknownmr713@gmail.com',
+      // password: '1234',
+      email: '',
+      password: '',
       rememberMe: false,
     },
   });

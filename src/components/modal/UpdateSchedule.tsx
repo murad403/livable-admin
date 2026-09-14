@@ -20,9 +20,9 @@ export default function UpdateSchedule({ isOpen, item, onClose }: UpdateSchedule
     const { register, handleSubmit, reset, formState: { errors } } = useForm<UpdateScheduleItemFormValues>({
         resolver: zodResolver(updateScheduleItemSchema),
         defaultValues: {
-            start_time: '09:00',
+            start_time: '',
             title: '',
-            item_type: 'meeting',
+            item_type: '',
             short_description: '',
             description: '',
             host_name: '',
@@ -36,9 +36,9 @@ export default function UpdateSchedule({ isOpen, item, onClose }: UpdateSchedule
     useEffect(() => {
         if (item) {
             reset({
-                start_time: item.start_time || '09:00',
+                start_time: item.start_time,
                 title: item.title || '',
-                item_type: item.item_type || item.type || 'meeting',
+                item_type: item.item_type || item.type,
                 short_description: item.short_description || '',
                 description: item.description || '',
                 host_name: item.host_name || '',
