@@ -8,6 +8,9 @@ import {
     TCreateScoutingTripInput,
     TUpdateScoutingTripInput,
     TDeleteScoutingTripInput,
+    TCityTest,
+    TCreateCityTestInput,
+    TUpdateCityTestInput,
 } from "./app.type";
 
 const appApi = baseApi.injectEndpoints({
@@ -70,6 +73,36 @@ const appApi = baseApi.injectEndpoints({
             }),
             providesTags: ["Trips"],
         }),
+        getCityTests: builder.query<TCityTest[], void>({
+            query: () => ({
+                url: "/admin/city-tests/",
+                method: "GET",
+            }),
+            providesTags: ["CityTests"],
+        }),
+        createCityTest: builder.mutation<TCityTest, TCreateCityTestInput>({
+            query: (data) => ({
+                url: "/admin/city-tests/",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["CityTests"],
+        }),
+        updateCityTest: builder.mutation<TCityTest, TUpdateCityTestInput>({
+            query: ({ id, data }) => ({
+                url: `/admin/city-tests/${id}/`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["CityTests"],
+        }),
+        deleteCityTest: builder.mutation<void, string>({
+            query: (id) => ({
+                url: `/admin/city-tests/${id}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["CityTests"],
+        }),
     }),
 });
 
@@ -82,4 +115,8 @@ export const {
     useCreateScoutingTripMutation,
     useUpdateScoutingTripMutation,
     useDeleteScoutingTripMutation,
+    useGetCityTestsQuery,
+    useCreateCityTestMutation,
+    useUpdateCityTestMutation,
+    useDeleteCityTestMutation,
 } = appApi;

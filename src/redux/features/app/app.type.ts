@@ -83,4 +83,44 @@ export interface TScoutingTripsResponse {
   trips: TScoutingTrip[];
 }
 
+export interface TExternalLink {
+  label: string;
+  url: string;
+}
+
+export interface TCityTest {
+  id: string;
+  category_id?: string;
+  category?: string;
+  title: string;
+  city: string;
+  short_description: string;
+  google_maps_link: string;
+  external_links: TExternalLink[];
+  note_prompts: string[];
+  question_prompts: string[];
+  order: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface TCreateCityTestInput {
+  id: string;
+  city: string;
+  category: string;
+  title: string;
+  short_description: string;
+  google_maps_link: string;
+  external_links: TExternalLink[];
+  note_prompts: string[];
+  question_prompts: string[];
+  order: number;
+}
+
+export interface TUpdateCityTestInput {
+  id: string;
+  data: Partial<TCreateCityTestInput>;
+}
+
+
 

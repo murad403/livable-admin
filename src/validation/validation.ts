@@ -45,4 +45,31 @@ export const profileSchema = z.object({
 });
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;
+
+export const externalLinkSchema = z.object({
+  label: z.string().min(1, 'Label is required'),
+  url: z.string().min(1, 'URL is required'),
+});
+
+export const cityTestSchema = z.object({
+  id: z
+    .string()
+    .min(1, 'ID is required')
+    .regex(
+      /^[a-zA-Z0-9_-]+$/,
+      'Enter a valid slug consisting of letters, numbers, underscores or hyphens (e.g. everyday-lunch)'
+    ),
+  city: z.string().min(1, 'City is required'),
+  category: z.string().min(1, 'Category is required'),
+  title: z.string().min(1, 'Title is required'),
+  short_description: z.string().min(1, 'Short description is required'),
+  google_maps_link: z.string().min(1, 'Google Maps link is required'),
+  external_links: z.array(externalLinkSchema),
+  note_prompts: z.array(z.string()),
+  question_prompts: z.array(z.string()),
+  order: z.number().min(1, 'Order must be at least 1'),
+});
+
+export type CityTestFormValues = z.infer<typeof cityTestSchema>;
+
 
