@@ -36,6 +36,12 @@ export default function AdminTopbar({
     if (pathname.includes('/scouting-trips')) {
       return 'SCOUTING TRIPS';
     }
+    if (pathname.includes('/city-test')) {
+      return 'CITY TEST';
+    }
+    if (pathname.includes('/schedule')) {
+      return 'SCHEDULE';
+    }
     if (pathname.includes('/client-dossiers')) {
       return 'CLIENT DOSSIERS';
     }
