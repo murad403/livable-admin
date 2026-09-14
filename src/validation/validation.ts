@@ -39,8 +39,10 @@ export const verifyOtpSchema = z.object({
 export type VerifyOtpFormValues = z.infer<typeof verifyOtpSchema>;
 
 export const profileSchema = z.object({
-  fullName: z.string().min(1, 'Full name is required'),
-  email: z.string().min(1, 'Email is required').email('Valid email address is required'),
+  first_name: z.string().min(1, 'First name is required'),
+  last_name: z.string().min(1, 'Last name is required'),
+  email: z.string().optional(),
 });
 
-export type ProfileFormValues = z.infer<typeof profileSchema>;
+export type ProfileFormValues = z.infer<typeof profileSchema>;
+

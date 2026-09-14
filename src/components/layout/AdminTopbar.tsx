@@ -1,6 +1,7 @@
 'use client';
 import { usePathname } from 'next/navigation';
-import { ChevronLeft, ChevronRight, Bell, Menu } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { useGetMeQuery } from '@/redux/features/auth/auth.api';
 
 interface AdminTopbarProps {
   isCollapsed?: boolean;
@@ -14,6 +15,7 @@ export default function AdminTopbar({
   onMobileMenuClick,
 }: AdminTopbarProps) {
   const pathname = usePathname();
+  const { data: user } = useGetMeQuery();
 
   const getPageTitle = () => {
     if (pathname.includes('/settings')) {
@@ -73,10 +75,21 @@ export default function AdminTopbar({
         </div>
       </div>
 
-
-        <button className="w-7 h-7 bg-[#1c1c1c] text-white font-black text-xs flex items-center justify-center rounded-xs hover:bg-black transition-colors shrink-0 cursor-pointer">
-          L
-        </button>
+      {/* Right Section: User Profile Avatar */}
+      <div className="flex items-center gap-2">
+        <div className="w-8 h-8 bg-[#1c1c1c] text-white font-black text-xs flex items-center justify-center rounded-full shrink-0 overflow-hidden border border-neutral-200">
+          {user?.image ? (
+            // eslint-disable-next-next/no-img-element
+            <img
+              src={user.image}
+              alt="User Avatar"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            (user?.first_name?.[0] || 'L').toUpperCase()
+          )}
+        </div>
+      </div>
     </header>
   );
 }

@@ -1,5 +1,5 @@
 import baseApi from "@/redux/api/api";
-import { TChangePasswordInput, TChangePasswordResponse, TSignInInput, TSignInResponse } from "./auth.type";
+import { TChangePasswordInput, TChangePasswordResponse, TSignInInput, TSignInResponse, TUser } from "./auth.type";
 
 const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -21,10 +21,27 @@ const authApi = baseApi.injectEndpoints({
                 }
             }
         }),
+        getMe: builder.query<TUser, void>({
+            query: () => ({
+                url: "/auth/me/",
+                method: "GET",
+            }),
+            providesTags: ["User"],
+        }),
+        updateMe: builder.mutation<TUser, FormData>({
+            query: (data) => ({
+                url: "/auth/me/",
+                method: "PATCH",
+                body: data,
+            }),
+            invalidatesTags: ["User"],
+        }),
     })
 })
 
 export const {
     useSignInMutation,
     useChangePasswordMutation,
+    useGetMeQuery,
+    useUpdateMeMutation,
 } = authApi;

@@ -3,8 +3,9 @@ export interface TUser {
   email: string;
   first_name: string;
   last_name: string;
+  image?: string | null;
   is_admin: boolean;
-  client_id: number;
+  client_id?: number | null;
 }
 
 export interface TSignInResponse {

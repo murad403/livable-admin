@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutGrid, Users, Compass, MessageSquare, Settings, LogOut, X } from 'lucide-react';
 import { removeToken } from '@/utils/auth';
+import { useGetMeQuery } from '@/redux/features/auth/auth.api';
 
 interface NavItem {
   id: string;
@@ -76,6 +77,7 @@ export default function AdminSidebar({
 }: AdminSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: user } = useGetMeQuery();
 
   const handleLogout = async () => {
     await removeToken();
@@ -196,13 +198,22 @@ export default function AdminSidebar({
               }`}
           >
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-7 h-7 bg-[#ff3b30] flex items-center justify-center font-extrabold text-white text-xs rounded-xs shrink-0">
-                L
+              <div className="w-8 h-8 bg-[#ff3b30] flex items-center justify-center font-extrabold text-white text-xs rounded-full shrink-0 overflow-hidden border border-neutral-700">
+                {user?.image ? (
+                  // eslint-disable-next-next/no-img-element
+                  <img
+                    src={user.image}
+                    alt="User Avatar"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  (user?.first_name?.[0] || 'L').toUpperCase()
+                )}
               </div>
               {!isCollapsed && (
                 <div className="flex flex-col min-w-0">
                   <span className="text-xs font-bold text-white uppercase tracking-wider truncate">
-                    LIVABLE OPERATIONS
+                    {user?.first_name ? `${user.first_name} ${user.last_name}` : 'LIVABLE OPERATIONS'}
                   </span>
                 </div>
               )}
