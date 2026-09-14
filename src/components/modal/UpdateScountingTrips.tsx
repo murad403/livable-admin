@@ -1,55 +1,63 @@
 'use client';
+
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Calendar, X, Loader2 } from 'lucide-react';
-import { useGetClientsQuery, useCreateScoutingTripMutation } from '@/redux/features/app/app.api';
+import { Edit2, X, Loader2 } from 'lucide-react';
+import { TScoutingTrip } from '@/redux/features/app/app.type';
+import { useUpdateScoutingTripMutation } from '@/redux/features/app/app.api';
 import { toast } from 'sonner';
 
-const addScoutingTripSchema = z.object({
-  clientId: z.string().min(1, 'Client selection is required'),
+const updateScoutingTripSchema = z.object({
   city: z.string().min(1, 'City is required'),
   timeline: z.string().min(1, 'Timeline is required'),
   guide_name: z.string().min(1, 'Guide name is required'),
   property_views: z.number().min(0, 'Property views count is required'),
 });
 
-export type AddScoutingTripFormValues = z.infer<typeof addScoutingTripSchema>;
+export type UpdateScoutingTripFormValues = z.infer<typeof updateScoutingTripSchema>;
 
-interface AddScoutingTripsProps {
+interface UpdateScoutingTripsProps {
   isOpen: boolean;
+  trip: TScoutingTrip | null;
   onClose: () => void;
 }
 
-export default function AddScoutingTrips({
+export default function UpdateScountingTrips({
   isOpen,
+  trip,
   onClose,
-}: AddScoutingTripsProps) {
-  const { data: clients, isLoading: isClientsLoading } = useGetClientsQuery();
-  const [createScoutingTrip, { isLoading: isCreating }] = useCreateScoutingTripMutation();
+}: UpdateScoutingTripsProps) {
+  const [updateScoutingTrip, { isLoading: isUpdating }] = useUpdateScoutingTripMutation();
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<AddScoutingTripFormValues>({
-    resolver: zodResolver(addScoutingTripSchema),
-    defaultValues: {
-      clientId: '',
-      city: '',
-      timeline: '',
-      guide_name: '',
-      property_views: 4,
-    },
+  } = useForm<UpdateScoutingTripFormValues>({
+    resolver: zodResolver(updateScoutingTripSchema),
   });
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (trip) {
+      reset({
+        city: trip.city || '',
+        timeline: trip.timeline || '',
+        guide_name: trip.guide_name || '',
+        property_views: trip.property_views || 0,
+      });
+    }
+  }, [trip, reset]);
 
-  const handleFormSubmit = async (values: AddScoutingTripFormValues) => {
+  if (!isOpen || !trip) return null;
+
+  const handleFormSubmit = async (values: UpdateScoutingTripFormValues) => {
     try {
-      await createScoutingTrip({
-        clientId: Number(values.clientId),
+      await updateScoutingTrip({
+        clientId: trip.client_id,
+        id: trip.id,
         data: {
           city: values.city,
           timeline: values.timeline,
@@ -57,11 +65,10 @@ export default function AddScoutingTrips({
           property_views: Number(values.property_views),
         },
       }).unwrap();
-      toast.success('Scouting trip scheduled successfully!');
-      reset();
+      toast.success('Scouting trip updated successfully!');
       onClose();
     } catch (err: any) {
-      toast.error(err?.data?.message || 'Failed to schedule scouting trip');
+      toast.error(err?.data?.message || 'Failed to update scouting trip');
     }
   };
 
@@ -71,9 +78,9 @@ export default function AddScoutingTrips({
         {/* Header */}
         <div className="px-6 py-4 border-b border-neutral-200 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Calendar className="w-5 h-5 text-[#ff3b30]" />
+            <Edit2 className="w-5 h-5 text-[#ff3b30]" />
             <h2 className="text-sm font-extrabold text-neutral-800 uppercase tracking-wider">
-              SCHEDULE SCOUTING TRIP
+              UPDATE SCOUTING TRIP
             </h2>
           </div>
           <button
@@ -86,30 +93,14 @@ export default function AddScoutingTrips({
 
         {/* Form Body */}
         <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6 space-y-4">
-          {/* CLIENT DROPDOWN * */}
-          <div>
-            <label className="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-              SELECT CLIENT *
-            </label>
-            <select
-              {...register('clientId')}
-              disabled={isClientsLoading}
-              className="w-full bg-neutral-50/80 border border-neutral-200 rounded px-3 py-2 text-xs text-neutral-800 focus:outline-none focus:border-neutral-400 focus:bg-white transition-colors cursor-pointer disabled:opacity-50"
-            >
-              <option value="">
-                {isClientsLoading ? 'Loading clients...' : '-- Select Client --'}
-              </option>
-              {clients?.map((client) => (
-                <option key={client.id} value={client.id}>
-                  {client.full_name} ({client.email})
-                </option>
-              ))}
-            </select>
-            {errors.clientId && (
-              <p className="text-[11px] text-red-500 mt-0.5 font-medium">
-                {errors.clientId.message}
-              </p>
-            )}
+          {/* CLIENT READONLY INFO */}
+          <div className="bg-neutral-50 p-3 rounded border border-neutral-200/60">
+            <span className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+              CLIENT
+            </span>
+            <span className="text-xs font-extrabold text-neutral-900 uppercase">
+              {trip.client_name} ({trip.email})
+            </span>
           </div>
 
           {/* CITY * */}
@@ -196,11 +187,11 @@ export default function AddScoutingTrips({
             </button>
             <button
               type="submit"
-              disabled={isCreating}
+              disabled={isUpdating}
               className="px-5 py-2 bg-[#ff3b30] hover:bg-red-600 text-white rounded text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs disabled:opacity-50 flex items-center gap-1.5"
             >
-              {isCreating && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-              <span>SCHEDULE TRIP</span>
+              {isUpdating && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              <span>SAVE CHANGES</span>
             </button>
           </div>
         </form>

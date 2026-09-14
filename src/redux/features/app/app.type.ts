@@ -35,3 +35,45 @@ export interface TRequestedClient {
   scouting_people_type: string;
   created_at?: string;
 }
+
+export interface TScoutingTrip {
+  id: number;
+  tour_id: number;
+  client_id: number;
+  client_name: string;
+  email: string;
+  visa: string;
+  city: string;
+  timeline: string;
+  guide_name: string;
+  property_views: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface TCreateScoutingTripInput {
+  clientId: number;
+  data: {
+    city: string;
+    timeline: string;
+    guide_name: string;
+    property_views: number;
+  };
+}
+
+export interface TUpdateScoutingTripInput {
+  clientId: number;
+  id: number;
+  data: {
+    city?: string;
+    timeline?: string;
+    guide_name?: string;
+    property_views?: number;
+  };
+}
+
+export interface TDeleteScoutingTripInput {
+  clientId: number;
+  id: number;
+}
+

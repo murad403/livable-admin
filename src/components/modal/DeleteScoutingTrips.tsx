@@ -1,22 +1,38 @@
 'use client';
 
 import React from 'react';
-import { Trash2, X, AlertTriangle } from 'lucide-react';
+import { Trash2, X, AlertTriangle, Loader2 } from 'lucide-react';
+import { TScoutingTrip } from '@/redux/features/app/app.type';
+import { useDeleteScoutingTripMutation } from '@/redux/features/app/app.api';
+import { toast } from 'sonner';
 
 interface DeleteScoutingTripsProps {
   isOpen: boolean;
-  clientName?: string;
+  trip: TScoutingTrip | null;
   onClose: () => void;
-  onConfirm: () => void;
 }
 
 export default function DeleteScoutingTrips({
   isOpen,
-  clientName,
+  trip,
   onClose,
-  onConfirm,
 }: DeleteScoutingTripsProps) {
-  if (!isOpen) return null;
+  const [deleteScoutingTrip, { isLoading: isDeleting }] = useDeleteScoutingTripMutation();
+
+  if (!isOpen || !trip) return null;
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteScoutingTrip({
+        clientId: trip.client_id,
+        id: trip.id,
+      }).unwrap();
+      toast.success('Scouting trip deleted successfully!');
+      onClose();
+    } catch (err: any) {
+      toast.error(err?.data?.message || 'Failed to delete scouting trip');
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-2xs overflow-y-auto">
@@ -44,7 +60,7 @@ export default function DeleteScoutingTrips({
             <div className="text-xs text-neutral-700 leading-relaxed">
               Are you sure you want to delete the scouting trip schedule for{' '}
               <span className="font-extrabold text-neutral-900 uppercase">
-                {clientName || 'this client'}
+                {trip.client_name || 'this client'}
               </span>
               ? This action cannot be undone.
             </div>
@@ -62,13 +78,12 @@ export default function DeleteScoutingTrips({
           </button>
           <button
             type="button"
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
-            className="px-5 py-2 bg-[#ff3b30] hover:bg-red-600 text-white rounded text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-2xs"
+            disabled={isDeleting}
+            onClick={handleConfirmDelete}
+            className="px-5 py-2 bg-[#ff3b30] hover:bg-red-600 text-white rounded text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-2xs disabled:opacity-50 flex items-center gap-1.5"
           >
-            DELETE TRIP
+            {isDeleting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+            <span>DELETE TRIP</span>
           </button>
         </div>
       </div>
