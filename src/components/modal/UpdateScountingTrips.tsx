@@ -47,7 +47,7 @@ export default function UpdateScountingTrips({
   });
 
   useEffect(() => {
-    if (trip) {
+    if (isOpen && trip) {
       reset({
         city: trip.city || '',
         timeline: trip.timeline || '',
@@ -55,23 +55,23 @@ export default function UpdateScountingTrips({
         property_views: trip.property_views || 0,
       });
     }
-  }, [trip, reset]);
+  }, [isOpen]);
 
   if (!isOpen || !trip) return null;
 
   const handleFormSubmit = async (values: UpdateScoutingTripFormValues) => {
     try {
       console.log(values)
-      // await updateScoutingTrip({
-      //   clientId: trip.client_id,
-      //   id: trip.id,
-      //   data: {
-      //     city: values.city,
-      //     timeline: values.timeline,
-      //     guide_name: values.guide_name,
-      //     property_views: Number(values.property_views),
-      //   },
-      // }).unwrap();
+      await updateScoutingTrip({
+        clientId: trip.client_id,
+        id: trip.id,
+        data: {
+          city: values.city,
+          timeline: values.timeline,
+          guide_name: values.guide_name,
+          property_views: Number(values.property_views),
+        },
+      }).unwrap();
       toast.success('Scouting trip updated successfully!');
       onClose();
     } catch (err: any) {
