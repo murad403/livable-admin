@@ -81,6 +81,7 @@ export default function ScoutingTripsPage() {
 
       {/* Update Scouting Trip Modal */}
       <UpdateScountingTrips
+        key={editingTrip?.id}
         isOpen={!!editingTrip}
         trip={editingTrip}
         onClose={() => setEditingTrip(null)}

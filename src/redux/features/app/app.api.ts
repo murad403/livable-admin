@@ -55,6 +55,13 @@ const appApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Trips"],
         }),
+        getSingleScoutingTrip: builder.query<TScoutingTrip, { clientId: number; id: number }>({
+            query: ({ clientId, id }) => ({
+                url: `/clients/${clientId}/trips/${id}/`,
+                method: "GET",
+            }),
+            providesTags: ["Trips"],
+        }),
         updateScoutingTrip: builder.mutation<TScoutingTrip, TUpdateScoutingTripInput>({
             query: ({ clientId, id, data }) => ({
                 url: `/clients/${clientId}/trips/${id}/`,
@@ -146,6 +153,7 @@ export const {
     useGetRequestedClientsQuery,
     useGetScoutingTripsQuery,
     useGetUpcomingTripsQuery,
+    useGetSingleScoutingTripQuery,
     useCreateScoutingTripMutation,
     useUpdateScoutingTripMutation,
     useDeleteScoutingTripMutation,

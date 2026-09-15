@@ -1,12 +1,11 @@
 'use client';
-
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Edit2, X, Loader2 } from 'lucide-react';
 import { TScoutingTrip } from '@/redux/features/app/app.type';
-import { useUpdateScoutingTripMutation } from '@/redux/features/app/app.api';
+import { useGetSingleScoutingTripQuery, useUpdateScoutingTripMutation } from '@/redux/features/app/app.api';
 import { toast } from 'sonner';
 
 const updateScoutingTripSchema = z.object({
@@ -29,33 +28,33 @@ export default function UpdateScountingTrips({
   trip,
   onClose,
 }: UpdateScoutingTripsProps) {
+  const { data: singleTrip } = useGetSingleScoutingTripQuery(
+    { clientId: trip?.client_id!, id: trip?.id! },
+    { skip: !isOpen || !trip?.client_id || !trip?.id }
+  );
+
   const [updateScoutingTrip, { isLoading: isUpdating }] = useUpdateScoutingTripMutation();
+
+  const activeTrip = singleTrip || trip;
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<UpdateScoutingTripFormValues>({
     resolver: zodResolver(updateScoutingTripSchema),
-    defaultValues: {
-      city: '',
-      timeline: '',
-      guide_name: '',
-      property_views: 0,
+    values: activeTrip
+      ? {
+          city: activeTrip.city || '',
+          timeline: activeTrip.timeline || '',
+          guide_name: activeTrip.guide_name || '',
+          property_views: activeTrip.property_views || 0,
+        }
+      : undefined,
+    resetOptions: {
+      keepDirtyValues: true,
     },
   });
-
-  useEffect(() => {
-    if (isOpen && trip) {
-      reset({
-        city: trip.city || '',
-        timeline: trip.timeline || '',
-        guide_name: trip.guide_name || '',
-        property_views: trip.property_views || 0,
-      });
-    }
-  }, [isOpen]);
 
   if (!isOpen || !trip) return null;
 
