@@ -17,19 +17,21 @@ export default function ProfileTab() {
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
-    defaultValues: {
-      first_name: '',
-      last_name: '',
-      email: '',
-    },
+    values: userData
+      ? {
+          first_name: userData.first_name || '',
+          last_name: userData.last_name || '',
+          email: userData.email || '',
+        }
+      : undefined,
   });
 
   useEffect(() => {
     if (userData) {
       reset({
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        email: userData.email,
+        first_name: userData.first_name || '',
+        last_name: userData.last_name || '',
+        email: userData.email || '',
       });
       if (userData.image) {
         setImagePreview(userData.image);
