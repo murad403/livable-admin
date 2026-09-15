@@ -20,8 +20,8 @@ export default function ScoutingTripsPage() {
   const tripList = Array.isArray(response?.trips)
     ? response.trips
     : Array.isArray(response)
-    ? response
-    : [];
+      ? response
+      : [];
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">

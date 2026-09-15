@@ -59,11 +59,10 @@ export default function CityTestPage() {
           <button
             key={cat}
             onClick={() => setCategoryFilter(cat)}
-            className={`px-3 py-1.5 text-xs font-extrabold uppercase tracking-wider rounded transition-colors cursor-pointer ${
-              categoryFilter === cat
+            className={`px-3 py-1.5 text-xs font-extrabold uppercase tracking-wider rounded transition-colors cursor-pointer ${categoryFilter === cat
                 ? 'bg-[#ff3b30] text-white shadow-2xs'
                 : 'bg-white text-neutral-600 border border-neutral-200 hover:bg-neutral-50'
-            }`}
+              }`}
           >
             {cat === 'ALL' ? 'ALL CATEGORIES' : cat.replace('_', ' ')}
           </button>

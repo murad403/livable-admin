@@ -119,8 +119,8 @@ export default function UpdateSchedule({ isOpen, item, onClose }: UpdateSchedule
                                 <select
                                     {...register('item_type')}
                                     className={`w-full px-3 py-2 bg-white border text-xs text-neutral-900 rounded focus:outline-none transition-colors cursor-pointer ${errors.item_type
-                                            ? 'border-red-500 focus:border-red-500'
-                                            : 'border-neutral-200 focus:border-neutral-400'
+                                        ? 'border-red-500 focus:border-red-500'
+                                        : 'border-neutral-200 focus:border-neutral-400'
                                         }`}
                                 >
                                     <option value="meeting">Meeting</option>
@@ -143,8 +143,8 @@ export default function UpdateSchedule({ isOpen, item, onClose }: UpdateSchedule
                                     type="time"
                                     {...register('start_time')}
                                     className={`w-full px-3 py-2 bg-white border text-xs text-neutral-900 rounded focus:outline-none transition-colors ${errors.start_time
-                                            ? 'border-red-500 focus:border-red-500'
-                                            : 'border-neutral-200 focus:border-neutral-400'
+                                        ? 'border-red-500 focus:border-red-500'
+                                        : 'border-neutral-200 focus:border-neutral-400'
                                         }`}
                                 />
                                 {errors.start_time && (
@@ -177,8 +177,8 @@ export default function UpdateSchedule({ isOpen, item, onClose }: UpdateSchedule
                                 placeholder="e.g. Neighborhood Guide Tour"
                                 {...register('title')}
                                 className={`w-full px-3 py-2 bg-white border text-xs text-neutral-900 rounded focus:outline-none transition-colors ${errors.title
-                                        ? 'border-red-500 focus:border-red-500'
-                                        : 'border-neutral-200 focus:border-neutral-400'
+                                    ? 'border-red-500 focus:border-red-500'
+                                    : 'border-neutral-200 focus:border-neutral-400'
                                     }`}
                             />
                             {errors.title && (
@@ -198,8 +198,8 @@ export default function UpdateSchedule({ isOpen, item, onClose }: UpdateSchedule
                                 placeholder="e.g. Tour of the historical district."
                                 {...register('short_description')}
                                 className={`w-full px-3 py-2 bg-white border text-xs text-neutral-900 rounded focus:outline-none transition-colors ${errors.short_description
-                                        ? 'border-red-500 focus:border-red-500'
-                                        : 'border-neutral-200 focus:border-neutral-400'
+                                    ? 'border-red-500 focus:border-red-500'
+                                    : 'border-neutral-200 focus:border-neutral-400'
                                     }`}
                             />
                             {errors.short_description && (
@@ -219,8 +219,8 @@ export default function UpdateSchedule({ isOpen, item, onClose }: UpdateSchedule
                                 placeholder="Detailed itinerary and specifics for this item..."
                                 {...register('description')}
                                 className={`w-full px-3 py-2 bg-white border text-xs text-neutral-900 rounded focus:outline-none transition-colors ${errors.description
-                                        ? 'border-red-500 focus:border-red-500'
-                                        : 'border-neutral-200 focus:border-neutral-400'
+                                    ? 'border-red-500 focus:border-red-500'
+                                    : 'border-neutral-200 focus:border-neutral-400'
                                     }`}
                             />
                             {errors.description && (
