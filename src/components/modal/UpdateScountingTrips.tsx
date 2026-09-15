@@ -31,24 +31,6 @@ export default function UpdateScountingTrips({
 }: UpdateScoutingTripsProps) {
   const [updateScoutingTrip, { isLoading: isUpdating }] = useUpdateScoutingTripMutation();
 
-  const formDefaultValues = React.useMemo(() => {
-    if (!trip) {
-      return {
-        city: '',
-        timeline: '',
-        guide_name: '',
-        property_views: 0,
-      };
-    }
-    const t = trip as any;
-    return {
-      city: t.city || t.destination || t.target_destination || '',
-      timeline: t.timeline || t.dates || t.target_arrival_timeline || '',
-      guide_name: t.guide_name || t.guide || '',
-      property_views: typeof t.property_views === 'number' ? t.property_views : Number(t.views || 0),
-    };
-  }, [trip]);
-
   const {
     register,
     handleSubmit,
@@ -56,14 +38,24 @@ export default function UpdateScountingTrips({
     formState: { errors },
   } = useForm<UpdateScoutingTripFormValues>({
     resolver: zodResolver(updateScoutingTripSchema),
-    values: formDefaultValues,
+    defaultValues: {
+      city: '',
+      timeline: '',
+      guide_name: '',
+      property_views: 0,
+    },
   });
 
   useEffect(() => {
-    if (trip && isOpen) {
-      reset(formDefaultValues);
+    if (trip) {
+      reset({
+        city: trip.city || '',
+        timeline: trip.timeline || '',
+        guide_name: trip.guide_name || '',
+        property_views: trip.property_views || 0,
+      });
     }
-  }, [trip, isOpen, reset, formDefaultValues]);
+  }, [trip, reset]);
 
   if (!isOpen || !trip) return null;
 

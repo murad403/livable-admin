@@ -32,12 +32,7 @@ export default function UpdateClientDossiers({
   onClose,
   onSubmit,
 }: UpdateClientDossiersProps) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<UpdateDossierFormValues>({
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<UpdateDossierFormValues>({
     resolver: zodResolver(updateDossierSchema),
     defaultValues: {
       id: '',
