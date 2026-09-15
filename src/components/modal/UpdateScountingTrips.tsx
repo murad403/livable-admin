@@ -61,16 +61,17 @@ export default function UpdateScountingTrips({
 
   const handleFormSubmit = async (values: UpdateScoutingTripFormValues) => {
     try {
-      await updateScoutingTrip({
-        clientId: trip.client_id,
-        id: trip.id,
-        data: {
-          city: values.city,
-          timeline: values.timeline,
-          guide_name: values.guide_name,
-          property_views: Number(values.property_views),
-        },
-      }).unwrap();
+      console.log(values)
+      // await updateScoutingTrip({
+      //   clientId: trip.client_id,
+      //   id: trip.id,
+      //   data: {
+      //     city: values.city,
+      //     timeline: values.timeline,
+      //     guide_name: values.guide_name,
+      //     property_views: Number(values.property_views),
+      //   },
+      // }).unwrap();
       toast.success('Scouting trip updated successfully!');
       onClose();
     } catch (err: any) {
